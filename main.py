@@ -1,6 +1,6 @@
 import sys
 
-import matplotlib.pyplot as plt
+import plotly.express as px
 import pandas as pd
 
 # print python executable used to run this script
@@ -41,9 +41,14 @@ for col in score_columns:
 # create a new column for the average score
 df['average_score'] = df[mean_columns].mean(axis=1, skipna=True)
 
-# Plotting the average score
-plt.scatter(df.id, df['average_score'])
-plt.title('Scatter plot of average scores')
-plt.xlabel('Index')  # this can be changed to something more meaningful, but for now does well
-plt.ylabel('Average score')
-plt.show()
+# sort dataframe by average_score
+df = df.sort_values('average_score').reset_index(drop=True)
+
+fig = px.scatter(df, x=df.index, y="average_score", hover_data=['id', 'Submitter netid'])
+fig.update_layout(
+    title='Scatter plot of average scores',
+    xaxis_title="Index (sorted by average score)",
+    yaxis_title="Average score"
+)
+
+fig.show()
